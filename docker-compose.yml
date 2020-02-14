@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  database:
+    image: postgres:11.2-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - /tmp/postgres/data:/var/lib/postgresql/data/pgdata
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=betta
+  app:
+    depends_on:
+      - "database"
+    build:
+      context: .
+    ports:
+      - 8083:8083
